@@ -143,6 +143,10 @@ func newHTTP2Client(ctx context.Context, conn net.Conn, opts ConnectOptions,
 		keepaliveEnabled = true
 	}
 
+	if opts.InitialConnWindowSize == 0 {
+		opts.InitialConnWindowSize = maxWindowSize
+	}
+
 	dynamicWindow := true
 	icwz := initialWindowSize
 	if opts.InitialConnWindowSize >= defaultWindowSize {
@@ -187,6 +191,11 @@ func newHTTP2Client(ctx context.Context, conn net.Conn, opts ConnectOptions,
 		bufferPool:            newBufferPool(),
 	}
 	t.controlBuf = newControlBuffer(t.ctx.Done())
+
+	if opts.InitialWindowSize == 0 {
+		opts.InitialWindowSize = maxWindowSize
+	}
+
 	if opts.InitialWindowSize >= defaultWindowSize {
 		t.initialWindowSize = opts.InitialWindowSize
 		dynamicWindow = false

@@ -449,7 +449,16 @@ func setUpServerOnly(t *testing.T, port int, serverConfig *ServerConfig, ht hTyp
 }
 
 func setUp(t *testing.T, port int, maxStreams uint32, ht hType) (*server, *http2Client) {
-	return setUpWithOptions(t, port, &ServerConfig{MaxStreams: maxStreams}, ht, ConnectOptions{})
+	return setUpWithOptions(t, port,
+		&ServerConfig{
+			MaxStreams:            maxStreams,
+			InitialWindowSize:     defaultWindowSize,
+			InitialConnWindowSize: defaultWindowSize,
+		}, ht,
+		ConnectOptions{
+			InitialWindowSize:     defaultWindowSize,
+			InitialConnWindowSize: defaultWindowSize,
+		})
 }
 
 func setUpWithOptions(t *testing.T, port int, serverConfig *ServerConfig, ht hType, copts ConnectOptions) (*server, *http2Client) {
@@ -1163,7 +1172,8 @@ func TestServerConnDecoupledFromApplicationRead(t *testing.T) {
 
 func TestServerWithMisbehavedClient(t *testing.T) {
 	var wg sync.WaitGroup
-	server := setUpServerOnly(t, 0, &ServerConfig{}, suspended)
+	c := &ServerConfig{InitialWindowSize: defaultWindowSize, InitialConnWindowSize: defaultWindowSize}
+	server := setUpServerOnly(t, 0, c, suspended)
 	defer func() {
 		wg.Wait()
 		server.stop()

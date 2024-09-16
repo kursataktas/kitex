@@ -153,6 +153,10 @@ func newHTTP2Server(ctx context.Context, conn net.Conn, config *ServerConfig) (_
 		})
 	}
 
+	if config.InitialWindowSize == 0 {
+		config.InitialWindowSize = maxWindowSize
+	}
+
 	dynamicWindow := true
 	iwz := initialWindowSize
 	if config.InitialWindowSize >= defaultWindowSize {
@@ -164,6 +168,11 @@ func newHTTP2Server(ctx context.Context, conn net.Conn, config *ServerConfig) (_
 			Val: iwz,
 		})
 	}
+
+	if config.InitialConnWindowSize == 0 {
+		config.InitialConnWindowSize = maxWindowSize
+	}
+
 	icwz := initialWindowSize
 	if config.InitialConnWindowSize >= defaultWindowSize {
 		icwz = config.InitialConnWindowSize
