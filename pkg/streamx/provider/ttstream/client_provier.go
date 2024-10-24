@@ -62,7 +62,7 @@ func (c clientProvider) NewStream(ctx context.Context, ri rpcinfo.RPCInfo) (stre
 	var intHeader IntHeader
 	var err error
 	if c.headerHandler != nil {
-		intHeader, strHeader, err = c.headerHandler.OnStream(ctx)
+		intHeader, strHeader, err = c.headerHandler.OnWriteStream(ctx)
 		if err != nil {
 			return nil, err
 		}

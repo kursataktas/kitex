@@ -18,13 +18,13 @@ package ttstream
 
 type ClientProviderOption func(cp *clientProvider)
 
-func WithClientMetaHandler(metaHandler MetaFrameHandler) ClientProviderOption {
+func WithClientMetaFrameHandler(handler MetaFrameHandler) ClientProviderOption {
 	return func(cp *clientProvider) {
-		cp.metaHandler = metaHandler
+		cp.metaHandler = handler
 	}
 }
 
-func WithClientHeaderHandler(handler HeaderFrameHandler) ClientProviderOption {
+func WithClientHeaderFrameHandler(handler HeaderFrameHandler) ClientProviderOption {
 	return func(cp *clientProvider) {
 		cp.headerHandler = handler
 	}
